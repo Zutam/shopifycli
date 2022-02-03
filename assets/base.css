@@ -2777,4 +2777,9 @@ details-disclosure > details {
 
 .header__heading{
   border: 1px solid black;
-  }
+}	
+
+.header__heading .h2{
+color:red;
+
+}
