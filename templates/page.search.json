@@ -1,0 +1,12 @@
+{
+  "sections": {
+    "page-search": {
+      "type": "page-search",
+      "settings": {
+      }
+    }
+  },
+  "order": [
+    "page-search"
+  ]
+}
