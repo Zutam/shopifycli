@@ -1,0 +1,42 @@
+<!-- Vue.js cdn   -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<div id="app-1" :title='message'>  
+</div>
+<script>   
+  var app = new Vue({
+    el: '#app-1',
+    data: {
+      message: 'Hello Vue.js!'
+    }
+  })  
+</script>
+<!-- <script>
+    Vue.config.productionTip = false
+    var demo = new Vue({
+      delimiters: ['${', '}'],
+      el: '#app',
+      components: {        
+      },
+      data: {
+        activedata: "aaa",        
+      },
+      watch: {},
+      methods: {},
+      beforeMount: function() {
+        console.log("Product", this.product.id), this.init();
+      }
+    })
+</script> -->
+
+{% schema %}
+  {
+    "name": "Section name",
+    "settings": []
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

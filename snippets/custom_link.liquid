@@ -1,0 +1,45 @@
+<script>
+  $(document).ready(function(){
+    var product = '{{product | json }}';
+    var currentoption = $('form[action="/cart/add"]');
+    var selector = currentoption.find('.single-option-selector');    
+    var variant,products = JSON.parse(product);
+    var value;
+    var array=[],option1,option2,option3;
+    selector.empty();
+ 
+    for (var i=0; i<products.variants.length; i++) {        
+      variant = products.variants[i];
+      if (variant.available) {         
+        if(variant.option1 != '' && variant.option1 != null && variant.option1.length){                              
+          var vption = variant.option1;        
+          array[i]= vption;                                                                  
+        }        
+        if(variant.option2 != '' && variant.option2 != null && variant.option2.length){                            
+          var vption = variant.option2;          
+          array[i] = vption;
+        }
+        if(variant.option3 != '' && variant.option3 != null && variant.option3.length){                            
+          var vption = variant.option3;
+          array[i] = vption;
+        }                      
+      }
+      console.log(array[i],'arrayarray');
+    }     
+    //        $('.single-option-selector:eq(0)').append('<option value='+vption+'>' + vption + '</option>'); 
+    if(value != '' && value != null ){               
+      value.append('<option value='+vption+'>' + vption + '</option>').val(vption);                    
+    }
+    
+//     function varaint_option (option,value){        
+//       if(value != '' && value != null ){ 
+//         value.append('<option value="">' + option + '</option>').val(option).trigger('change');                    
+//       }        
+//     }
+    
+    {% for option in product.options %}	      
+    $('.single-option-selector:eq({{ forloop.index0 }})').prepend('<option value="">Pick a ' + {{ product.options[forloop.index0] | json }} + '</option>').val('').trigger('change');                  
+    {% endfor %}                 
+    
+  });
+</script>
