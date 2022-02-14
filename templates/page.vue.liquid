@@ -1,0 +1,26 @@
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+<div id="app" >  
+<input type='text' class="input-search" v-model='message' @change='add_mssg(message)'>
+  <div class="wrp_div">
+    <h1 v-html=`${message}`></h1>
+  </div>
+</div>
+
+<script>
+  var app = new Vue({    
+    el: '#app',
+    data: {
+      message: 'Hello Vue!',
+      items : [], 
+    },
+    created() {
+      this.add_mssg(this.message);
+    },
+    methods:{
+      add_mssg(search){        
+        this.items = search;
+        console.log(this.item,'====');
+      }
+    }
+  }); 
+</script>

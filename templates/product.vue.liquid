@@ -1,0 +1,406 @@
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+{% comment %}
+<div id="app" class="vue_product">
+  <div class="product_wrapper">
+    <div class="hero_image_wrapper">
+      <div class="image_wrapper">
+        <img :src="getImage('productHero','-HM01')[0].src" v-if="getImage('productHero','-HM01').length > 0">
+        <img :src="getImage('productHero','-HF01')[0].src" v-if="getImage('productHero','-HF01').length > 0">
+      </div>
+    </div>
+    <div class="product_main">
+      <div class="left_side">
+        <div class="product-360">
+          <figure class="featured-image" v-if="getImage('product360','-D01').length == 0 || getImage('product360','-D01')[0].src != currentImage" :style="{ 'background-image' : 'url(\'' + currentImage + '\')' }">
+          </figure>
+          <div class="product-thumbs" v-if="product360.filter( function(image) { return image.color === currentColor } ).length > 1">
+            <figure :class="{'is-active': currentType == '-F01' }" v-if="getImage('product360','-F01').length > 0" @click="changeImage('-F01')">
+              <img :src="getImage('product360','-F01')[0].src">
+            </figure>
+            <figure :class="{'is-active': currentType == '-L01' }" v-if="getImage('product360','-L01').length > 0" @click="changeImage('-L01')">
+              <img :src="getImage('product360','-L01')[0].src">
+            </figure>
+            <figure :class="{'is-active': currentType == '-S01' }" v-if="getImage('product360','-S01').length > 0" @click="changeImage('-S01')">
+              <img :src="getImage('product360','-S01')[0].src">
+            </figure>
+            <figure :class="{'is-active': currentType == '-B01' }" v-if="getImage('product360','-B01').length > 0" @click="changeImage('-B01')">
+              <img :src="getImage('product360','-B01')[0].src">
+            </figure>
+            <figure :class="{'is-active': currentType == '-T01' }" v-if="getImage('product360','-T01').length > 0" @click="changeImage('-T01')">
+              <img :src="getImage('product360','-T01')[0].src">
+            </figure>
+            <figure :class="{'is-active': currentType == '-U01' }" v-if="getImage('product360','-U01').length > 0" @click="changeImage('-U01')">
+              <img :src="getImage('product360','-U01')[0].src">
+            </figure>
+            <figure :class="{'is-active': currentType == '-D01' }" v-if="getImage('product360','-D01').length > 0" @click="changeImage('-D01')">
+              <img src="//cdn.shopify.com/s/files/1/2532/9670/files/360_degree_icon_0e5f465f-6244-4f49-a1f8-876b6263151d.png?v=1599601059">
+            </figure>
+          </div>
+        </div>
+      </div>
+      <div class="right_side">
+        <div class="product-details">
+          <aside>
+            <div class="product-breadrumbs-sku">
+              <p class="product-sku">${ currentVariant.sku }</p>
+            </div>
+            <div class="product-title">
+              <h1 class="page-title">${ product.title }</h1>
+            </div>
+            <div class="product-details-wrapper">
+              <div class="product-shape-info">
+                <div class="product-shape-image product-core-image" :style="{'background-image': 'url('+ getPreviewImage() +')'}"></div>
+                <div class="product-shape-info-details">
+                  <div>
+                    <p>Brim Group</p>
+                    <p>Wide Brim</p>
+                  </div>
+                  <div>
+                    <p>Crown Shape</p>
+                    <p>Teardrop</p>
+                  </div>
+                  <div>
+                    <p>Material Group</p>
+                    <p>Merino Wool Felt</p>
+                  </div>
+                </div>
+              </div>
+              <div class="product-specs">
+                <div>
+                  <span @click="toggleActiveSpec('specs')" class="product-spec-title">Materials &amp; Specifications <i class="ion-md-add has-margin-left-auto" :class="{'ion-md-remove':activeSpec == 'specs'}"></i></span>
+                  <vue-slide-up-down class="spec-details content" :active="activeSpec == 'specs'" :duration="250">
+                    <div>
+                      <div>
+                        <p><strong>Crown</strong>: 4 1/2" Teardrop</p>
+                      </div>
+                      <div>
+                        <p><strong>Fabric</strong>: 100% merino wool</p>
+                      </div>
+                      <div>
+                        <p>
+                          <strong>Brim</strong>
+                          : 3 1/4" Flat stiff brim w/ pencil curl</p>
+                      </div>
+                      <div>
+                        <p><strong>Hat Band</strong>: Grosgrain Full Wrap</p>
+                      </div>
+                      <div>
+                        <p><strong>Sweatband</strong>: Leather</p>
+                      </div>
+                      <div>
+                        <p><strong>Origin</strong>: Made in USA</p>
+                      </div>
+                    </div>
+                  </vue-slide-up-down>
+                </div>
+              </div>
+              <div class="product-options">
+                <div class="product-sizes">
+                  <button class="button is-small is-rounded" :class="{'is-active':currentVariant.option2 === variant.option2, 'is-disabled': !getVariantAvailable(variant) }" :title="variant.option2" :data-var="variant.title" v-for="variant in _.filter(product.variants, {option1: currentVariant.option1})" @click="changeSize(variant.option2)">${ variant.option2 }</button>
+                </div>
+                <div class="product-colorways has-margin-top-2" v-if="colorways && colorways.length > 1">
+                  <button class="lazyload instock" :class="{'is-active':currentVariant.option1 === colorway.split(';')[0] }" v-for="colorway in colorways" :title="colorway.split(';')[0]" @click="changeColor(colorway.split(';')[0])" :data-bg="getColorwayImage(colorway)" :style="{'background-image': 'url('+ getColorwayImage(colorway) +')'}"></button>
+                </div>
+              </div>
+              <form class="form" action="/cart/add" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="id" :value="currentVariant.id">
+                <div class="product-price">
+                  <strong data-product-price>
+                    <span :class="{'on-sale':currentVariant.compare_at_price}">${ formatPrice(currentVariant.price) }</span>
+<!--                     <span class="compare-at-price" v-if="currentVariant.compare_at_price">${ formatPrice(currentVariant.compare_at_price) }</span> - ${ currentVariant.option1 } <span class="has-text-grey" v-if="currentVariantQuantity < 5 && currentVariantQuantity > 0">( ${currentVariantQuantity} Left )</span> -->
+                  </strong>
+                </div>
+                <button class="add-to-cart-button button is-red" :class="['variant-' + currentVariant.id, 'product-' + product.id ]" :disabled="!currentVariantAvailable" type="submit">${ currentVariantAvailable ? "Add to Cart" : "Out of Stock" }</button>
+              </form>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    Vue.config.productionTip = false
+    var demo = new Vue({
+      delimiters: ['${', '}'],
+      el: '#app',
+      components: {
+        'vue-slide-up-down': VueSlideUpDown
+      },
+      data: {
+        activeSpec: "",
+        colorways: [],
+        currentColor: "",
+        fontColor: "",
+        currentImage: "",
+        currentSize: "",
+        currentType: "-F01",
+        currentTypes: [],
+        currentVariant: window.liquidVars.currentVariant,
+        currentVariantAvailable: !1,
+        currentVariantQuantity: 0,
+        defaultImage: "",
+        product: window.liquidVars.product,
+        product360: [],
+        product360Codes: ["-F01", "-L01", "-S01", "-B01", "-U01", "-T01", "-GLB", "-D01"],
+        productColors: [],
+        productHero: [],
+        productHeroCodes: ["-HM01", "-HF01"],
+        productVariantMetafields: window.liquidVars.productVariantMetafields,
+        sizingModal: !1,
+        showOOS: !1,
+        tags: window.liquidVars.tags,
+        watchlistModal: !1,
+        windowHeight: 0,
+        url: window.liquidVars.url
+      },
+      watch: {},
+      methods: {  
+        parseHtmlEntities: function(t) {
+          return t.replace(/&#(\d+)/gi, function(t, e) {
+            var r = parseInt(e, 10);
+            return String.fromCharCode(r)
+          })
+        },
+        collectImages: function () {
+          var t = this,
+              e = this.product.media,
+              r = function (r) {
+                return e.reduce(function (e, n) {
+                  if ("image" === n.media_type)
+                    var a = n.src,
+                        o = n.src,
+                        s = "" + n.src.match(/-([A-Z]+[0-9]+)/)[0],
+                        c = t.productColors.find(function (t) {
+                          return t.color_code === n.src.match(/([A-Z]{3,4})/)[0];
+                        }).name;
+                  else
+                    (a = n.sources[0].url),
+                      (o = [n.sources[0].url, n.sources[1].url]),
+                      (s = "" + n.sources[0].url.match(/-([A-Z]+[0-9]+)/)[0]),
+                      (c = t.productColors.find(function (t) {
+                      return t.color_code === n.sources[0].url.match(/([A-Z]{3,4})/)[0];
+                    }).name);
+                  return r.includes(s) && (e = [].concat((e), [{ code: s, color: c, src: a, med_src: o }])), e;
+                }, []);
+
+              };
+          (this.product360 = r(this.product360Codes)), (this.productHero = r(this.productHeroCodes));
+        },
+        collectColor: function () {
+          var t = this,
+              k = t.productColors.find(function (t) {
+                return t.color_code === n.src.match(/([A-Z]{3,4})/)[0];
+              }).color;
+          console.log('123', k);
+        },
+        init: function() {
+          var t = this;
+          this.normalizeColors(window.liquidVars.productColors), this.collectImages();
+          var e = ["brim_category", "class", "color_group_available", "colors_available", "crown_type", "fabric_group", "feature", "shape", "sizes_available", "status", "style", "subclass", "subshape_group", "subshape"],
+              r = this.product.tags.reduce(function (t, r) {
+                var a = r.split(":"),                    
+                    o = a,
+                    s = o[0],
+                    c = o[1];
+                return e.includes(s) && (t[s] = [].concat((t[s] || []), [c])), t;
+              }, {});
+          
+          (this.product = Object.assign({}, r, this.product)),
+            this.product.variants.reduce(function (e, r) {
+            return (e[r.option1] = [].concat((e[r.option1] || []), [t.getVariantAvailable(r)])), e;
+          }, {}),
+            (this.colorways = _.uniq(
+            this.product.colors_available
+            ? this.product.colors_available.map(function (e) {
+              return (
+                e +
+                ";" +
+                t.product.variants
+                .find(function (t) {
+                  return t.option1 === e;
+                })
+                .sku.match(/([A-Z]{3,4})/)[0]
+              );
+            })
+            : []
+          ));
+          var a = void 0;
+          if (
+            ((a = this.colorways.length
+              ? Number(
+              this.product.variants.find(function (e) {
+                return t.getVariantAvailable(e) && e.option1 === t.colorways[0].split(";")[0];
+              })
+            )
+              : Number(this.product.variants[0].id)),
+             _.includes(window.liquidVars.location, "variant="))
+          ) {
+            var o = Number(window.location.href.match(/(variant=)[^%&]\d*/)[0].replace("variant=", ""));
+            _.filter(this.product.variants, { id: o }).length > 0 && (console.log("Variant", o), (a = o));
+          }
+          if (
+            ((this.currentVariant = this.product.variants.find(function (t) {
+              return t.id;
+            })),
+             (this.currentVariantAvailable = this.getVariantAvailable(this.currentVariant)),
+             (this.currentVariantQuantity = this.getVariantQuantity(this.currentVariant)),
+             (this.currentColor = this.currentVariant.option1),
+             (this.currentSize = this.currentVariant.option2),
+             (this.defaultImage = "https://prismic-io.s3.amazonaws.com/goorin%2Fcea2d0aa-bdba-4a7b-a9fa-947ba28a98c4_wide-brim.svg?-F01-" + this.currentColor),
+             this.product360.length)
+          )
+            try {
+              this.currentImage = this.product360
+              .find(function (e) {
+                return e.color === t.currentColor && _.includes(e.src, "-F01");
+              })
+              .src.replace(".png", "_768x.png")
+              .replace(".jpg", "_768x.jpg");
+            } catch (t) {
+              this.loadDefaultImage();
+            }
+          else this.loadDefaultImage();
+          (this.currentTypes = _.filter(this.product360, function (e) {
+            return e.color === t.currentColor;
+          }).map(function (t) {
+            return t.code;
+          })),
+            (this.currentTypes = _.difference(this.currentTypes, ["-L02", "-T01"])),
+            (this.currentTypes = _.sortBy(this.currentTypes, function (t) {
+            return ["-F01", "-L01", "-S01", "-B01", "-U01"].indexOf(t);
+          }));
+          var s = this.getUrlWithVariant(window.location.href, a);
+          (this.url = window.location.href), window.history.replaceState({ path: s }, "", s), this.$forceUpdate();
+        },
+        loadDefaultImage: function () {
+          (this.product360 = [].concat((this.product360), [{
+            src: this.defaultImage,
+            color: this.currentColor
+          }])),
+            (this.currentImage = this.defaultImage);
+        },
+        normalizeColors: function(t) {
+          this.productColors = t.map(function(t) {
+            return {
+              name: t.name.value[0].text,
+              color: t.color.value,
+              color_group: t.color_group.value,
+              color_code: t.color_code.value[0].text
+            }
+          });        
+        },
+        getImage: function (t, e) {
+          var r = this;
+          return _.filter(this[t], function (t) {
+            return t.color === r.currentColor && _.includes(t.src, e);
+          });          
+        },
+        getPreviewImage: function () {
+          return this.getImage("product360", "-L01").length > 0
+          ? this.getImage("product360", "-L01")[0].src.replace(".png", "_768x.png").replace(".jpg", "_768x.jpg")
+          : this.getImage("product360", "-F01").length > 0
+          ? this.getImage("product360", "-F01")[0].src.replace(".png", "_768x.png").replace(".jpg", "_768x.jpg")
+          : this.defaultImage;
+        },
+        getColorwayImage: function (t) {
+          var e = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : "-F01",
+            r = "-" + t.split(";")[1] + e;
+          return this.product.images.length &&
+            this.product.images.find(function (t) {
+            return t.includes(r);
+          })
+          ? this.product.images
+          .find(function (t) {
+            return t.includes(r);
+          })
+          .replace(".png", "_768x.png")
+          .replace(".jpg", "_768x.jpg")
+          : this.product.shape
+          ? this.defaultImage[this.product.shape[0]]
+          : "Fedora";
+        },
+        getVariantAvailable: function (t) {
+          return !!t.available;
+        },
+        getVariantQuantity: function (t) {
+          var e = this.productVariantMetafields[t.id];
+          return e && "T" === e.inv_buff_override ? t.inventory_quantity : Math.max(0, t.inventory_quantity - 3);
+        },
+        formatPrice: function (t) {
+          return (t / 100).toLocaleString("en-IN", { style: "currency", currency: "INR" }).slice(0, -3);
+        },
+        changeImage: function (t) {
+          var e = this;
+          (this.currentImage = this.product360
+           .find(function (r) {
+            return r.color === e.currentColor && _.includes(r.src, t);
+          })
+           .src.replace(".png", "_768x.png")
+           .replace(".jpg", "_768x.jpg")),
+            (this.currentType = t);
+        },
+        changeSize: function(t) {
+          var e = this;
+          this.currentVariant = _.filter(this.product.variants, function(r) {
+            return r.option1 === e.currentColor && r.option2 === t
+          })[0], this.currentVariantAvailable = this.getVariantAvailable(this.currentVariant), this.currentVariantQuantity = this.getVariantQuantity(this.currentVariant), window.triggerSwymVariantEvent && window.triggerSwymVariantEvent(this.currentVariant.id), this.currentSize = t;
+          var r = this.getUrlWithVariant(window.location.href, this.currentVariant.id);
+          window.history.replaceState({
+            path: r
+          }, "", r)
+        },
+        changeColor: function(t) {
+          var e = this;
+          this.currentColor = t;
+          var r = _.filter(this.product.variants, function(r) {
+            return r.option2 === e.currentSize && r.option1 === t
+          });
+          if (r.length > 0) this.currentVariant = r[0];
+          else {
+            var n = _.filter(this.product.variants, function(e) {
+              return e.option1 === t
+            });
+            this.currentVariant = _.last(n)
+          }
+          var c = e.productColors.find(function (k) {
+            return k.color;
+          }).color;
+          this.currentVariantAvailable = this.getVariantAvailable(this.currentVariant), this.currentVariantQuantity = this.getVariantQuantity(this.currentVariant), window.triggerSwymVariantEvent && window.triggerSwymVariantEvent(this.currentVariant.id), this.currentImage = this.product360.find(function(e) {
+//             console.log(e.color,'ssss');
+            return e.color === t && _.includes(e.src, "-F01")
+          }).src.replace(".png", "_768x.png").replace(".jpg", "_768x.jpg"), this.currentType = "-F01";
+          var i = this.getUrlWithVariant(window.location.href, this.currentVariant.id);
+          window.history.replaceState({
+            path: i
+          }, "", i)
+          
+        },
+        getUrlWithVariant: function (t, e) {
+          return /variant=/.test(t) ? t.replace(/(variant=)[^%&]\d*/, "$1" + e) : /\?/.test(t) ? t.concat("&variant=").concat(e) : t.concat("?variant=").concat(e);
+        },
+        addToCart: function () {
+          this.$http.post("/cart/add.js", { quantity: 1, id: this.currentVariant.id }).then(
+            function (t) {},
+            function (t) {
+              console.log(t);
+            }
+          );
+        },
+        toggleActiveSpec: function(t, e) {
+          this.activeSpec === t ? this.activeSpec = "" : this.activeSpec = t
+        },
+//         fontColors: function(t) {
+//           var c = t.productColors.find(function (t) {
+//             t.color;
+//           }).name;
+//           console.log(c);
+//         }
+      },
+      beforeMount: function() {
+        console.log("Product", this.product.id), this.init();
+      }
+    })
+</script>
+{% endcomment %}

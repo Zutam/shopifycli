@@ -1,0 +1,23 @@
+<div id="result"></div>
+{% section 'product-template' %}
+
+<script>
+  $(document).ready(function(){               
+    $('.single-option-selector').each(function(i,v){               
+      $(v).empty();          
+      function link_pro(product){
+        console.log(product,'productproduct');
+        for (var i=0; i=<product.variants.length; i++) {
+          var variant = product.variants[i];
+          console.log(variant,'variantvariant');
+        }
+      }
+      var product = '{{ product | json }}'; 
+      link_pro(product);
+    });                
+    {% for option in product.options %}      
+    $('.single-option-selector:eq({{forloop.index0}})').prepend('<option value="">Pick a ' + {{product.options[forloop.index0] | json}} + '</option>');      
+    {% endfor %}                  
+  });
+</script>
+

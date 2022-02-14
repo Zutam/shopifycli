@@ -1,0 +1,84 @@
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+<div class="product-template__container page-width" id="ProductSection-{{ section.id }}" data-section-id="{{ section.id }}" data-section-type="product" data-enable-history-state="true" data-ajax-enabled="{{ settings.enable_ajax }}">
+<div id="app" >  
+  <div class="wrp_div">    
+    <div class="grid product-single{% if section.settings.enable_payment_button %} product-single--{{ section.settings.media_size }}-media{% endif %}">
+      <div id="{{ media_wrapper_id }}" class="product-single__media-wrapper product_wrp_slider js " tabindex="-1" >
+        <div v-for='item in items'>
+          <testcomponent></testcomponent>  
+         
+        </div>
+      </div>
+    </div>    
+    <div class="title_wrap">
+      <testcomponent></testcomponent>  
+      <h1>Product Title:</h1>
+      <testcomponent></testcomponent>  
+      <h3 v-html=`${message}`></h3>      
+    </div>
+    <div class="price_wrap">
+      <testcomponent></testcomponent>  
+      <h1>Product Price:</h1>
+      <h3 v-html=`${price}`></h3>
+    </div>
+    <div>
+      <h1>Product Description:</h1>
+      <testcomponent></testcomponent>  
+      <p class="description_wrap" v-html=`${this.description}`></p>
+    </div>
+    <div>
+      <h1>Product Variants</h1>
+    </div>
+    <div class="variant_wrap" v-for='variant_item in item_variant'>
+      <ul>
+        <testcomponent></testcomponent>  
+        <li v-html=`${variant_item}`></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+
+  Vue.component('testcomponent',{
+    data:function() {
+      return {  
+        message: 'Hello Vue!',
+        variant_item: [],        
+      }
+      template :'<h1>'+product_title+'</h1>'
+    },
+    created() {
+      this.add_mssg(this.message,this.product_variants);
+      this.formatPrice(this.price,this.currency);
+    },
+    methods:{
+      add_mssg : function(){        
+        var product_title = this.product;          
+        this.message = product_title.title;
+        this.items = product_title.images;
+        this.description = product_title.description;
+        this.item_variant = product_title.options_with_values; 
+        console.log(product_title,'===---');
+      },     
+      formatPrice : function(t,currency) {
+        var price = (t / 100).toLocaleString("en-IN", { style: "currency", currency: currency }).slice(0, -3);
+        this.price = price;                
+      },      
+    }
+  }); 
+  var app = new Vue({    
+    el: '#app'
+  }); 
+</script>
+<style>
+  .image_wrap{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+  }
+  .image_wrap>div{
+  	flex:0 0 20%;
+  }
+</style>
