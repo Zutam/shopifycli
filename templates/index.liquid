@@ -1,1 +1,24 @@
-{{ content_for_index }}
+{% form 'customer' %}
+      {{ form.errors | default_errors }}
+      <input type="hidden" name="contact[tags]" value="Email subscribers"/>
+      
+      <label for="FirstName" class="hidden-label">{{ 'customer.sign_up.first_name' | t }}</label>
+      <input type="text" name="contact[first_name]" id="FirstName" class="input-full" placeholder="{{ 'customer.sign_up.first_name' | t }}" {% if form.first_name %}value="{{ form.first_name }}"{% endif %} autocapitalize="words" autofocus required>
+
+      <label for="LastName" class="hidden-label">{{ 'customer.sign_up.last_name' | t }}</label>
+      <input type="text" name="contact[last_name]" id="LastName" class="input-full" placeholder="{{ 'customer.sign_up.last_name' | t }}" {% if form.last_name %}value="{{ form.last_name }}"{% endif %} autocapitalize="words" required>
+
+      <label for="CompanyName" class="hidden-label">{{ 'customer.sign_up.company_name' | t }}</label>
+      <input type="text" name="contact[company_name]" id="CompanyName" class="input-full{% if form.errors contains 'company_name' %} error{% endif %}" placeholder="{{ 'customer.sign_up.company_name' | t }}" {% if form.company_name %} value="{{ form.company_name }}"{% endif %} autocorrect="off" autocapitalize="off" required>
+
+      <label for="Email" class="hidden-label">{{ 'customer.sign_up.email' | t }}</label>
+      <input type="email" name="contact[email]" id="Email" class="input-full{% if form.errors contains 'email' %} error{% endif %}" placeholder="{{ 'customer.sign_up.email' | t }}" {% if form.email %} value="{{ form.email }}"{% endif %} autocorrect="off" autocapitalize="off" required>
+{% comment %}
+<!--       <label for="CreatePassword" class="hidden-label">{{ 'customer.sign_up.password' | t }}</label>
+      <input type="password" name="customer[password]" id="CreatePassword" class="input-full{% if form.errors contains 'password' %} error{% endif %}" placeholder="{{ 'customer.sign_up.password' | t }}" required> -->
+{% endcomment %}
+      <p>
+        <input type="submit"  value="{{ 'customer.sign_up.submit' | t }}" class="btn btn--full submit1">
+      </p>
+      <a href="{{ shop.url }}">{{ 'customer.sign_up.cancel' | t }}</a>
+      {% endform %}
