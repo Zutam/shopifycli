@@ -17,7 +17,7 @@
       <input type="text" name="contact[last_name]" id="LastName" class="input-full" placeholder="{{ 'customer.sign_up.last_name' | t }}" {% if form.last_name %}value="{{ form.last_name }}"{% endif %} autocapitalize="words" required>
 
       <label for="CompanyName" class="hidden-label">{{ 'customer.sign_up.company_name' | t }}</label>
-      <input type="text" name="contact[company_name]" id="CompanyName" class="input-full{% if form.errors contains 'company_name' %} error{% endif %}" placeholder="{{ 'customer.sign_up.company_name' | t }}" {% if form.company_name %} value="{{ form.company_name }}"{% endif %} autocorrect="off" autocapitalize="off" required>
+      <input type="text" name="customer[note][company_name]" id="CompanyName" class="input-full{% if form.errors contains 'company_name' %} error{% endif %}" placeholder="{{ 'customer.sign_up.company_name' | t }}" {% if form.company_name %} value="{{ form.company_name }}"{% endif %} autocorrect="off" autocapitalize="off" required>
 
       <label for="Email" class="hidden-label">{{ 'customer.sign_up.email' | t }}</label>
       <input type="email" name="contact[email]" id="Email" class="input-full{% if form.errors contains 'email' %} error{% endif %}" placeholder="{{ 'customer.sign_up.email' | t }}" {% if form.email %} value="{{ form.email }}"{% endif %} autocorrect="off" autocapitalize="off" required>
@@ -27,3 +27,8 @@
       <a href="{{ shop.url }}">{{ 'customer.sign_up.cancel' | t }}</a>
       {% endform %}
     </div>
+
+	<div class="allergies">
+    <label for="allergies">Allergies</label>
+    <input id="allergies" type="text" name="customer[note][Allergies]" />
+  </div>
